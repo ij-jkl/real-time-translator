@@ -27,3 +27,6 @@ venv/
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# Ignore all MP3 files
+*.mp3
