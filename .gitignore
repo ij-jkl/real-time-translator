@@ -1,0 +1,29 @@
+# Python __pycache__ and venv
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+venv/
+.env
+
+# Whisper model files (just in case)
+*.pt
+*.bin
+
+# VS Code / PyCharm
+.vscode/
+.idea/
+
+# Docker
+*.log
+*.db
+*.sqlite3
+
+# .NET build artifacts (for later)
+**/bin/
+**/obj/
+*.user
+*.suo
+
+# OS metadata
+.DS_Store
+Thumbs.db
