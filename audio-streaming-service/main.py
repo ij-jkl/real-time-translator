@@ -5,7 +5,7 @@ import wave
 
 app = FastAPI()
 
-MAX_SECONDS = 8  # accumulate 8 seconds before transcribing
+MAX_SECONDS = 6  # accumulate 6 seconds before transcribing
 SAMPLE_RATE = 16000
 BYTES_PER_SECOND = SAMPLE_RATE * 2  # 2 bytes per sample (int16)
 
@@ -21,7 +21,7 @@ async def websocket_audio_handler(websocket: WebSocket):
             data = await websocket.receive_bytes()
             buffer.extend(data)
 
-            # Transcribe every ~8 seconds
+            # Transcribe every ~6 seconds
             if len(buffer) >= BYTES_PER_SECOND * MAX_SECONDS:
                 with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_audio_file:
                     with wave.open(temp_audio_file, 'wb') as wf:

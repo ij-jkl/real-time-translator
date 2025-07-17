@@ -16,7 +16,7 @@ async def send_to_whisper(audio_path):
             async with httpx.AsyncClient() as client:
                 response = await client.post(url, files=files, data=data)
 
-        await asyncio.sleep(0.1) 
+        await asyncio.sleep(0.1)
         return response.json()
 
     finally:
