@@ -46,7 +46,7 @@ async def transcribe_from_audio(audioFile : UploadFile = File(...)):
     # Transcribe the audio file using Whisper
 
     start_time = time.time()
-    transcription = model.transcribe(temp_path,word_timestamps=True, verbose=False)
+    transcription = model.transcribe(temp_path)
     end_time = time.time()
 
     total_time = end_time - start_time
