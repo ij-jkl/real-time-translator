@@ -1,33 +1,66 @@
-# Python __pycache__ and venv
+# ====================
+# Python cache
+# ====================
+__pycache__/
 **/__pycache__/
-**/*.pyc
-**/*.pyo
+*.py[cod]
+*.pyo
+
+# ====================
+# Virtual environments
+# ====================
 venv/
+.env/
 .env
 
-# Whisper model files (just in case)
+# ====================
+# Logs
+# ====================
+*.log
+
+# ====================
+# Temporary audio files (recordings/uploads)
+# ====================
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.webm
+*.m4a
+
+# ====================
+# Whisper model files (weights)
+# ====================
 *.pt
 *.bin
 
-# VS Code / PyCharm
+# ====================
+# FastAPI / SQLite cache
+# ====================
+*.sqlite3
+*.db
+
+# ====================
+# Docker
+# ====================
+*.pid
+
+# ====================
+# Editors / IDEs
+# ====================
 .vscode/
 .idea/
 
-# Docker
-*.log
-*.db
-*.sqlite3
-
-# .NET build artifacts (for later)
+# ====================
+# .NET (future compatibility)
+# ====================
 **/bin/
 **/obj/
 *.user
 *.suo
 
-# OS metadata
+# ====================
+# OS metadata files
+# ====================
 .DS_Store
 Thumbs.db
-
-# Ignore all MP3 files
-*.mp3
-*.wav
