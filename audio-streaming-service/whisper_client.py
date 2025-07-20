@@ -23,4 +23,4 @@ async def send_to_whisper(audio_path):
         try:
             os.remove(audio_path)
         except PermissionError:
-            print(f"⚠️ Could not delete temp file (still in use): {audio_path}")
+            print(f"Could not delete temp file (still in use): {audio_path}")
