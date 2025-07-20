@@ -5,10 +5,11 @@ import { AsyncPipe, NgIf } from '@angular/common';
 @Component({
   selector: 'app-transcribe',
   standalone: true,
-  imports: [NgIf, AsyncPipe],
+  imports: [NgIf],
   templateUrl: './transcribe.html',
   styleUrls: ['./transcribe.scss']
 })
+
 export class TranscribeComponent {
   private ws = inject(WebSocketService);
 

@@ -54,7 +54,7 @@ export class WebSocketService {
         const data = JSON.parse(event.data);
         const text = data.Transcription || data.text || event.data;
 
-        console.log('[WebSocket] Received:', text);
+        console.log('[WebSocket] Received :', text);
         this._transcriptions.update(prev => [...prev, text]);
 
         const words = text.trim().split(/\s+/).length;
@@ -73,7 +73,7 @@ export class WebSocketService {
         this.cleanup();
       };
     } catch (err) {
-      console.error('Mic access error:', err);
+      console.error('Mic access error :', err);
       alert('Permiso de micrófono denegado o error al acceder.');
     }
   };
