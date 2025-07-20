@@ -13,20 +13,21 @@ export class WebSocketService {
     whisper: 'inactive'
   });
 
-  private readonly _transcriptions = signal<string[]>([]);
+  private readonly _liveWords = signal<string[]>([]);
   private readonly _totalWords = signal(0);
   private readonly _chunksProcessed = signal(0);
   private readonly _sessionStart = signal<number | null>(null);
   private readonly _sessionTime = signal('00:00');
 
   readonly status = computed(() => this._status());
-  readonly transcription = computed(() => this._transcriptions().join('\n'));
+  readonly transcription = computed(() => this._liveWords().join(' '));
   readonly totalWords = computed(() => this._totalWords());
   readonly chunksProcessed = computed(() => this._chunksProcessed());
   readonly sessionTime = computed(() => this._sessionTime());
 
   private timer: any = null;
   private whisperTimeout: any = null;
+  private wordTimer: any = null;
 
   connect = async () => {
     if (this.socket) return;
@@ -60,19 +61,18 @@ export class WebSocketService {
         if (text.trim()) {
           this.setWhisperStatus('processing');
 
-          this._transcriptions.update(prev => [...prev, text]);
+          const words = text.trim().split(/\s+/);
+          this.enqueueWordsWithDelay(words, 275);
 
-          const words = text.trim().split(/\s+/).length;
-          this._totalWords.update(prev => prev + words);
+          this._totalWords.update(prev => prev + words.length);
           this._chunksProcessed.update(prev => prev + 1);
 
-          // Reset whisper status timeout
           if (this.whisperTimeout) clearTimeout(this.whisperTimeout);
           this.whisperTimeout = setTimeout(() => {
             this.setWhisperStatus('waiting');
           }, 9000);
         } else {
-          console.warn('[WebSocket] Texto vacío recibido, estado no actualizado.');
+          console.warn('[WebSocket] Texto vac\u00edo recibido, estado no actualizado.');
         }
       };
 
@@ -85,7 +85,7 @@ export class WebSocketService {
       };
     } catch (err) {
       console.error('Mic access error :', err);
-      alert('Permiso de micrófono denegado o error al acceder.');
+      alert('Permiso de micr\u00f3fono denegado o error al acceder.');
     }
   };
 
@@ -95,11 +95,27 @@ export class WebSocketService {
   };
 
   clear = () => {
-    this._transcriptions.set([]);
+    this._liveWords.set([]);
     this._totalWords.set(0);
     this._chunksProcessed.set(0);
     this._sessionStart.set(Date.now());
   };
+
+  private enqueueWordsWithDelay(words: string[], delay = 275) {
+    if (this.wordTimer) clearInterval(this.wordTimer);
+    let index = 0;
+
+    this.wordTimer = setInterval(() => {
+      if (index >= words.length) {
+        clearInterval(this.wordTimer);
+        this.wordTimer = null;
+        return;
+      }
+
+      this._liveWords.update(prev => [...prev, words[index]]);
+      index++;
+    }, delay);
+  }
 
   private startSessionTimer() {
     if (this.timer) clearInterval(this.timer);
@@ -144,10 +160,10 @@ export class WebSocketService {
 
   private cleanup() {
     if (this.timer) clearInterval(this.timer);
+    if (this.wordTimer) clearInterval(this.wordTimer);
     if (this.whisperTimeout) clearTimeout(this.whisperTimeout);
 
     this._status.set({ websocket: 'disconnected', recording: 'idle', whisper: 'inactive' });
-
     this.socket?.close();
     this.socket = null;
 
