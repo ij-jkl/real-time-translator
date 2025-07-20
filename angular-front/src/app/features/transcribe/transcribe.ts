@@ -5,7 +5,7 @@ import { AsyncPipe, NgIf } from '@angular/common';
 @Component({
   selector: 'app-transcribe',
   standalone: true,
-  imports: [],
+  imports: [NgIf, AsyncPipe],
   templateUrl: './transcribe.html',
   styleUrls: ['./transcribe.scss']
 })

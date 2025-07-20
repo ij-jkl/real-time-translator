@@ -54,6 +54,7 @@ export class WebSocketService {
         const data = JSON.parse(event.data);
         const text = data.Transcription || data.text || event.data;
 
+        console.log('[WebSocket] Received:', text);
         this._transcriptions.update(prev => [...prev, text]);
 
         const words = text.trim().split(/\s+/).length;

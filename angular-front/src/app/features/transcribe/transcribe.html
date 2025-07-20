@@ -6,16 +6,31 @@
   <div class="status-bar">
     <div class="status-grid">
       <div class="status-item">
-        <div class="status-indicator" id="websocket-status"></div>
-        <span class="status-text" id="websocket-text">WebSocket Desconectado</span>
+        <div
+          class="status-indicator"
+          [class.connected]="status().websocket === 'connected'"
+        ></div>
+        <span class="status-text">
+          {{ status().websocket === 'connected' ? 'WebSocket Conectado' : 'WebSocket Desconectado' }}
+        </span>
       </div>
       <div class="status-item">
-        <div class="status-indicator" id="recording-status"></div>
-        <span class="status-text" id="recording-text">Grabación Detenida</span>
+        <div
+          class="status-indicator"
+          [class.connected]="status().recording === 'recording'"
+        ></div>
+        <span class="status-text">
+          {{ status().recording === 'recording' ? 'Grabando' : 'Grabación Detenida' }}
+        </span>
       </div>
       <div class="status-item">
-        <div class="status-indicator" id="whisper-status"></div>
-        <span class="status-text" id="whisper-text">Whisper Inactivo</span>
+        <div
+          class="status-indicator"
+          [class.connected]="status().whisper === 'processing'"
+        ></div>
+        <span class="status-text">
+          {{ status().whisper === 'processing' ? 'Whisper Procesando' : 'Whisper Inactivo' }}
+        </span>
       </div>
     </div>
   </div>
@@ -29,39 +44,33 @@
   <div class="transcription-panel">
     <div class="panel-header">
       <span>📝 Transcripción en Vivo</span>
-      <span class="word-count" id="word-count">0 palabras</span>
+      <span class="word-count">{{ totalWords() }} palabras</span>
     </div>
-    <div class="audio-visualizer" id="visualizer" style="display: none;">
-      <div class="visualizer-bar"></div>
-      <div class="visualizer-bar"></div>
-      <div class="visualizer-bar"></div>
-      <div class="visualizer-bar"></div>
-      <div class="visualizer-bar"></div>
-      <div class="visualizer-bar"></div>
-      <div class="visualizer-bar"></div>
-      <div class="visualizer-bar"></div>
-      <div class="visualizer-bar"></div>
-      <div class="visualizer-bar"></div>
-    </div>
-    <div class="transcription-content" id="transcription-log">
-      <div class="empty-state">
-        Esperando transcripción... Conecta el WebSocket y comienza a hablar.
+
+    <div class="transcription-content">
+      <div *ngIf="transcription(); else waiting">
+        <pre>{{ transcription() }}</pre>
       </div>
+      <ng-template #waiting>
+        <div class="empty-state">
+          Esperando transcripción... Conecta el WebSocket y comienza a hablar.
+        </div>
+      </ng-template>
     </div>
   </div>
 
   <div class="stats-panel">
     <div class="stats-grid">
       <div class="stat-item">
-        <span class="stat-number" id="total-words">0</span>
+        <span class="stat-number">{{ totalWords() }}</span>
         <span class="stat-label">Total Palabras</span>
       </div>
       <div class="stat-item">
-        <span class="stat-number" id="session-time">00:00</span>
+        <span class="stat-number">{{ sessionTime() }}</span>
         <span class="stat-label">Tiempo Sesión</span>
       </div>
       <div class="stat-item">
-        <span class="stat-number" id="chunks-processed">0</span>
+        <span class="stat-number">{{ chunksProcessed() }}</span>
         <span class="stat-label">Chunks Procesados</span>
       </div>
     </div>
