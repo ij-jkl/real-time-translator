@@ -26,6 +26,7 @@ export class WebSocketService {
   readonly sessionTime = computed(() => this._sessionTime());
 
   private timer: any = null;
+  private whisperTimeout: any = null;
 
   connect = async () => {
     if (this.socket) return;
@@ -55,14 +56,24 @@ export class WebSocketService {
         const text = data.Transcription || data.text || event.data;
 
         console.log('[WebSocket] Received :', text);
-        this._transcriptions.update(prev => [...prev, text]);
 
-        const words = text.trim().split(/\s+/).length;
-        this._totalWords.update(prev => prev + words);
-        this._chunksProcessed.update(prev => prev + 1);
+        if (text.trim()) {
+          this.setWhisperStatus('processing');
 
-        this.setWhisperStatus('processing');
-        setTimeout(() => this.setWhisperStatus('waiting'), 1000);
+          this._transcriptions.update(prev => [...prev, text]);
+
+          const words = text.trim().split(/\s+/).length;
+          this._totalWords.update(prev => prev + words);
+          this._chunksProcessed.update(prev => prev + 1);
+
+          // Reset whisper status timeout
+          if (this.whisperTimeout) clearTimeout(this.whisperTimeout);
+          this.whisperTimeout = setTimeout(() => {
+            this.setWhisperStatus('waiting');
+          }, 9000);
+        } else {
+          console.warn('[WebSocket] Texto vacío recibido, estado no actualizado.');
+        }
       };
 
       this.socket.onerror = () => {
@@ -133,6 +144,8 @@ export class WebSocketService {
 
   private cleanup() {
     if (this.timer) clearInterval(this.timer);
+    if (this.whisperTimeout) clearTimeout(this.whisperTimeout);
+
     this._status.set({ websocket: 'disconnected', recording: 'idle', whisper: 'inactive' });
 
     this.socket?.close();
