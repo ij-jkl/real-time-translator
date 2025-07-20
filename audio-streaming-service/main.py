@@ -49,7 +49,8 @@ async def websocket_audio_handler(websocket: WebSocket):
                     new_text = full_text  # fallback if no clear overlap
 
                 if new_text:
-                    print("Transcription : ", new_text)
+                    print("Log : Transcription : ", new_text)
+                    await websocket.send_json({"Transcription": new_text})
 
                 previous_text = full_text
                 buffer = buffer[-OVERLAP_SIZE:]

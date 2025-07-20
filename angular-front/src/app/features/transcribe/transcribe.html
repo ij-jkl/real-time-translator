@@ -1,0 +1,69 @@
+<div class="container">
+  <div class="header">
+    <h1>🎤 Transcripción en Tiempo Real</h1>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-grid">
+      <div class="status-item">
+        <div class="status-indicator" id="websocket-status"></div>
+        <span class="status-text" id="websocket-text">WebSocket Desconectado</span>
+      </div>
+      <div class="status-item">
+        <div class="status-indicator" id="recording-status"></div>
+        <span class="status-text" id="recording-text">Grabación Detenida</span>
+      </div>
+      <div class="status-item">
+        <div class="status-indicator" id="whisper-status"></div>
+        <span class="status-text" id="whisper-text">Whisper Inactivo</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-primary" (click)="connect()">Conectar WebSocket</button>
+    <button class="btn btn-danger" (click)="disconnect()">Desconectar</button>
+    <button class="btn btn-secondary" (click)="clear()">Limpiar Transcripción</button>
+  </div>
+
+  <div class="transcription-panel">
+    <div class="panel-header">
+      <span>📝 Transcripción en Vivo</span>
+      <span class="word-count" id="word-count">0 palabras</span>
+    </div>
+    <div class="audio-visualizer" id="visualizer" style="display: none;">
+      <div class="visualizer-bar"></div>
+      <div class="visualizer-bar"></div>
+      <div class="visualizer-bar"></div>
+      <div class="visualizer-bar"></div>
+      <div class="visualizer-bar"></div>
+      <div class="visualizer-bar"></div>
+      <div class="visualizer-bar"></div>
+      <div class="visualizer-bar"></div>
+      <div class="visualizer-bar"></div>
+      <div class="visualizer-bar"></div>
+    </div>
+    <div class="transcription-content" id="transcription-log">
+      <div class="empty-state">
+        Esperando transcripción... Conecta el WebSocket y comienza a hablar.
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-panel">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-number" id="total-words">0</span>
+        <span class="stat-label">Total Palabras</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" id="session-time">00:00</span>
+        <span class="stat-label">Tiempo Sesión</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" id="chunks-processed">0</span>
+        <span class="stat-label">Chunks Procesados</span>
+      </div>
+    </div>
+  </div>
+</div>
