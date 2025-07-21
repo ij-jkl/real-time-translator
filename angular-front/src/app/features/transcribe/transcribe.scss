@@ -48,6 +48,44 @@ $font-size-2xl: 1.5rem;
 $font-size-3xl: 1.875rem;
 $font-size-4xl: 2.25rem;
 
+// Mixins for repeated panel styles
+@mixin panel-style {
+  background: white;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-sm;
+  border: 1px solid $color-neutral-200;
+}
+
+// Mixin for button base style
+@mixin btn-base {
+  padding: $space-md $space-xl;
+  border: none;
+  border-radius: $radius-lg;
+  font-weight: 500;
+  font-size: $font-size-sm;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
 // Global resets to prevent scroll issues
 :host {
   display: block;
@@ -68,19 +106,6 @@ $font-size-4xl: 2.25rem;
   * {
     box-sizing: border-box;
   }
-}
-
-:host ::ng-deep body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-:host ::ng-deep html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow-x: hidden;
 }
 
 .container {
@@ -118,12 +143,9 @@ $font-size-4xl: 2.25rem;
 
 // Status Bar
 .status-bar {
-  background: white;
-  border-radius: $radius-xl;
+  @include panel-style;
   padding: $space-xl;
   margin-bottom: $space-xl;
-  box-shadow: $shadow-sm;
-  border: 1px solid $color-neutral-200;
   animation: fadeInUp 0.4s ease-out;
 }
 
@@ -219,38 +241,13 @@ $font-size-4xl: 2.25rem;
 }
 
 .btn {
-  padding: $space-md $space-xl;
-  border: none;
-  border-radius: $radius-lg;
-  font-weight: 500;
-  font-size: $font-size-sm;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 120px;
-  font-family: inherit;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  &:focus-visible {
-    outline: 2px solid $color-primary;
-    outline-offset: 2px;
-  }
-
-  &:active {
-    transform: translateY(1px);
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  @include btn-base;
 }
 
+// Accessibility: Ensure color contrast for buttons
 .btn-primary {
   background: $color-primary;
   color: white;
-
   &:hover:not(:disabled) {
     background: $color-primary-dark;
     box-shadow: $shadow-md;
@@ -260,7 +257,6 @@ $font-size-4xl: 2.25rem;
 .btn-danger {
   background: $color-error;
   color: white;
-
   &:hover:not(:disabled) {
     background: #dc2626;
     box-shadow: $shadow-md;
@@ -269,23 +265,19 @@ $font-size-4xl: 2.25rem;
 
 .btn-secondary {
   background: white;
-  color: $color-neutral-700;
-  border: 1px solid $color-neutral-300;
-
+  color: $color-neutral-900;
+  border: 1px solid $color-neutral-400;
   &:hover:not(:disabled) {
     background: $color-neutral-50;
-    border-color: $color-neutral-400;
+    border-color: $color-neutral-600;
     box-shadow: $shadow-sm;
   }
 }
 
 // Transcription Panel
 .transcription-panel {
-  background: white;
-  border-radius: $radius-xl;
+  @include panel-style;
   overflow: hidden;
-  box-shadow: $shadow-sm;
-  border: 1px solid $color-neutral-200;
   height: 500px;
   display: flex;
   flex-direction: column;
@@ -370,12 +362,9 @@ $font-size-4xl: 2.25rem;
 
 // Stats Panel
 .stats-panel {
-  background: white;
-  border-radius: $radius-xl;
+  @include panel-style;
   padding: $space-xl;
   margin-top: $space-xl;
-  box-shadow: $shadow-sm;
-  border: 1px solid $color-neutral-200;
   animation: fadeInUp 0.4s ease-out 0.3s both;
 }
 

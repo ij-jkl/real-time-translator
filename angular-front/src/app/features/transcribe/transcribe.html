@@ -1,53 +1,51 @@
-<div class="container">
-  <div class="header">
+<main class="container">
+  <header class="header">
     <h1>🎤 Transcripción en Tiempo Real</h1>
-  </div>
+  </header>
 
-  <div class="status-bar">
+  <section class="status-bar" aria-label="Estado de la transcripción">
     <div class="status-grid">
-      <div class="status-item">
+      <div class="status-item" *ngFor="let s of statusList">
         <div
           class="status-indicator"
-          [class.connected]="status().websocket === 'connected'"
+          [class.connected]="s.connected"
+          [attr.aria-label]="s.ariaLabel"
+          role="status"
         ></div>
-        <span class="status-text">
-          {{ status().websocket === 'connected' ? 'WebSocket Conectado' : 'WebSocket Desconectado' }}
-        </span>
-      </div>
-      <div class="status-item">
-        <div
-          class="status-indicator"
-          [class.connected]="status().recording === 'recording'"
-        ></div>
-        <span class="status-text">
-          {{ status().recording === 'recording' ? 'Grabando' : 'Grabación Detenida' }}
-        </span>
-      </div>
-      <div class="status-item">
-        <div
-          class="status-indicator"
-          [class.connected]="status().whisper === 'processing'"
-        ></div>
-        <span class="status-text">
-          {{ status().whisper === 'processing' ? 'Whisper Procesando' : 'Whisper Inactivo' }}
-        </span>
+        <span class="status-text">{{ s.text }}</span>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="controls">
-    <button class="btn btn-primary" (click)="connect()">Conectar WebSocket</button>
-    <button class="btn btn-danger" (click)="disconnect()">Desconectar</button>
-    <button class="btn btn-secondary" (click)="clear()">Limpiar Transcripción</button>
-  </div>
+  <nav class="controls" aria-label="Controles">
+    <button class="btn btn-primary"
+            (click)="connect()"
+            [disabled]="status().websocket === 'connected'"
+            aria-label="Conectar WebSocket"
+            [attr.aria-pressed]="status().websocket === 'connected'">
+      Conectar WebSocket
+    </button>
+    <button class="btn btn-danger"
+            (click)="disconnect()"
+            [disabled]="status().websocket !== 'connected'"
+            aria-label="Desconectar WebSocket"
+            [attr.aria-pressed]="status().websocket !== 'connected'">
+      Desconectar
+    </button>
+    <button class="btn btn-secondary"
+            (click)="clear()"
+            aria-label="Limpiar Transcripción">
+      Limpiar Transcripción
+    </button>
+  </nav>
 
-  <div class="transcription-panel">
+  <section class="transcription-panel" aria-label="Panel de transcripción">
     <div class="panel-header">
       <span>📝 Transcripción en Vivo</span>
       <span class="word-count">{{ totalWords() }} palabras</span>
     </div>
 
-    <div class="transcription-content">
+    <div class="transcription-content" aria-live="polite" #transcriptionContent>
       <div *ngIf="transcription(); else waiting">
         <pre>{{ transcription() }}</pre>
       </div>
@@ -57,9 +55,9 @@
         </div>
       </ng-template>
     </div>
-  </div>
+  </section>
 
-  <div class="stats-panel">
+  <section class="stats-panel" aria-label="Estadísticas de la sesión">
     <div class="stats-grid">
       <div class="stat-item">
         <span class="stat-number">{{ totalWords() }}</span>
@@ -74,5 +72,5 @@
         <span class="stat-label">Chunks Procesados</span>
       </div>
     </div>
-  </div>
-</div>
+  </section>
+</main>
