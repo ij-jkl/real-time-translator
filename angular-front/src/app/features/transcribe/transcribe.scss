@@ -477,19 +477,35 @@ $font-size-4xl: 2.25rem;
 }
 
 @media (max-width: 480px) {
-  :host {
-    padding: $space-md;
+  .transcription-panel {
+    min-height: 220px !important;
+    max-height: 70vh !important;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
   }
-
-  .header h1 {
-    font-size: $font-size-2xl;
+  .transcription-content {
+    min-height: 140px !important;
+    max-height: 60vh !important;
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    padding: $space-xs !important;
+    font-size: 0.65rem !important;
+    background: $color-neutral-50 !important;
+    border-radius: $radius-md !important;
+    box-sizing: border-box;
+    width: 100% !important;
+    display: block !important;
   }
-
-  .status-item {
-    padding: $space-md;
-  }
-
-  .stat-number {
-    font-size: $font-size-2xl;
+  .transcription-content pre {
+    font-size: 0.65rem !important;
+    padding: $space-xs !important;
+    border-radius: $radius-sm !important;
+    margin: 0 !important;
+    background: $color-neutral-50 !important;
+    width: 100% !important;
+    box-sizing: border-box;
+    word-break: break-word;
+    white-space: pre-wrap;
   }
 }
