@@ -1,0 +1,100 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+# ====================
+# Python cache
+# ====================
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+
+# ====================
+# Virtual environments
+# ====================
+venv/
+.env/
+.env
+
+# ====================
+# Logs
+# ====================
+*.log
+
+# ====================
+# Temporary audio files (recordings/uploads)
+# ====================
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.webm
+*.m4a
+
+# ====================
+# Whisper model files (weights)
+# ====================
+*.pt
+*.bin
+
+# ====================
+# FastAPI / SQLite cache
+# ====================
+*.sqlite3
+*.db
+
+# ====================
+# Docker
+# ====================
+*.pid
+
+# ====================
+# Editors / IDEs
+# ====================
+.vscode/
+.idea/
+
+# ====================
+# .NET (future compatibility)
+# ====================
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+**/publish/
+TestResults/
+
+# ====================
+# HTTP request files
+# ====================
+*.http
+
+# ====================
+# Python Pipenv/Poetry
+# ====================
+Pipfile.lock
+poetry.lock
+
+# ====================
+# Coverage reports
+# ====================
+coverage/
+.coverage
+*.cover
+*.coverage.*
+
+# ====================
+# Local settings
+# ====================
+local.settings.json
+
+# ====================
+# OS metadata files
+# ====================
+.DS_Store
+Thumbs.db
