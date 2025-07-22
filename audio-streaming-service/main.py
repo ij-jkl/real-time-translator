@@ -1,4 +1,5 @@
 ﻿from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.responses import JSONResponse
 from whisper_client import send_to_whisper
 import tempfile
 import wave
@@ -57,6 +58,11 @@ async def websocket_audio_handler(websocket: WebSocket):
 
     except WebSocketDisconnect:
         print("WebSocket connection closed.")
+
+
+@app.get("/healthz")
+def healthz():
+    return JSONResponse(content={"status": "ok"})
 
 
 """

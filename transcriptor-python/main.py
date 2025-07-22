@@ -5,6 +5,7 @@ import torch
 import whisper
 
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import JSONResponse
 
 import webbrowser
 import threading
@@ -24,6 +25,10 @@ print("Currently using " + device + " as device.")
 
 # Add check later to see if we are translating from en audio or not
 model = whisper.load_model("large", device = device)
+
+@app.get("/healthz")
+def healthz():
+    return JSONResponse(content={"status": "ok"})
 
 @app.post("/transcribe_from_audio")
 async def transcribe_from_audio(audioFile : UploadFile = File(...)):
@@ -69,6 +74,5 @@ async def transcribe_from_audio(audioFile : UploadFile = File(...)):
 
 
 """Instalation of the dependencies can be done using the following command : pip install fastapi uvicorn openai-whisper torch"""
-""" To run this FastAPI application, you can use the following command : uvicorn main:app"""
-
+""" uvicorn main: app --host 0.0.0.0 --port8000"""
 # Todo : Validate that the audio file is really of .mp3 extension, and not a .exe file with a .mp3 extension.

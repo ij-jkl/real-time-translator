@@ -42,7 +42,7 @@ export class WebSocketService {
         }
       });
 
-      this.socket = new WebSocket('ws://localhost:9000/ws/audio');
+      this.socket = new WebSocket('ws://localhost:5224/ws/audio');
       this.socket.binaryType = 'arraybuffer';
 
       this.socket.onopen = () => {
