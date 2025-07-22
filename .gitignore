@@ -64,3 +64,36 @@ venv/
 # ====================
 .DS_Store
 Thumbs.db
+
+#Net
+
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+# ====================
+# Python cache
+# ====================
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+
+# ====================
+# Virtual environments
+# ====================
+venv/
+.env/
+.env
+
+# ====================
+# Logs
+# ====================
+*.log
+
+# ====================
+# Temporary audio files (recordings/uploads)
+# ====================
+*.wav
