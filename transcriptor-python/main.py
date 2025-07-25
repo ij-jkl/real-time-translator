@@ -74,5 +74,5 @@ async def transcribe_from_audio(audioFile : UploadFile = File(...)):
 
 
 """Instalation of the dependencies can be done using the following command : pip install fastapi uvicorn openai-whisper torch"""
-""" uvicorn main: app --host 0.0.0.0 --port8000"""
+""" uvicorn main:app --host 0.0.0.0 --port 8000 """
 # Todo : Validate that the audio file is really of .mp3 extension, and not a .exe file with a .mp3 extension.
