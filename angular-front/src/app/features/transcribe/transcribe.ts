@@ -1,44 +1,48 @@
-import { Component, inject, effect, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {Component, inject, ViewChild, ElementRef, AfterViewInit, OnDestroy} from '@angular/core';
+
+import { CommonModule } from '@angular/common';
 import { WebSocketService } from '../../core/services/web-socket.service';
-import { AsyncPipe, NgIf, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-transcribe',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './transcribe.html',
-  styleUrls: ['./transcribe.scss']
+  templateUrl: './transcribe.html'
 })
+export class TranscribeComponent implements AfterViewInit, OnDestroy {
 
-export class TranscribeComponent implements AfterViewInit {
-  private ws = inject(WebSocketService);
+  private readonly ws = inject(WebSocketService);
 
   @ViewChild('transcriptionContent') transcriptionContentRef!: ElementRef<HTMLDivElement>;
 
-  connect = this.ws.connect;
-  disconnect = this.ws.disconnect;
-  clear = this.ws.clear;
+  readonly connect = this.ws.connect;
+  readonly disconnect = this.ws.disconnect;
+  readonly clear = this.ws.clear;
+  readonly status = this.ws.status;
+  readonly transcription = this.ws.transcription;
+  readonly totalWords = this.ws.totalWords;
+  readonly sessionTime = this.ws.sessionTime;
+  readonly chunksProcessed = this.ws.chunksProcessed;
 
-  status = this.ws.status;
-  transcription = this.ws.transcription;
-  totalWords = this.ws.totalWords;
-  sessionTime = this.ws.sessionTime;
-  chunksProcessed = this.ws.chunksProcessed;
+  private mutationObserver?: MutationObserver;
 
   get statusList() {
     const s = this.status();
     return [
       {
+        type: 'websocket',
         connected: s.websocket === 'connected',
         ariaLabel: s.websocket === 'connected' ? 'WebSocket conectado' : 'WebSocket desconectado',
         text: s.websocket === 'connected' ? 'WebSocket Conectado' : 'WebSocket Desconectado',
       },
       {
+        type: 'recording',
         connected: s.recording === 'recording',
         ariaLabel: s.recording === 'recording' ? 'Grabando' : 'Grabación detenida',
         text: s.recording === 'recording' ? 'Grabando' : 'Grabación Detenida',
       },
       {
+        type: 'whisper',
         connected: s.whisper === 'processing',
         ariaLabel: s.whisper === 'processing' ? 'Whisper procesando' : 'Whisper inactivo',
         text: s.whisper === 'processing' ? 'Whisper Procesando' : 'Whisper Inactivo',
@@ -46,39 +50,39 @@ export class TranscribeComponent implements AfterViewInit {
     ];
   }
 
-  private mutationObserver?: MutationObserver;
+  getStatusDotColor(status: { type: string; connected: boolean }): string {
+    if (!status.connected) {
+      return 'bg-red-500';
+    }
 
-  constructor() {
-    // No effect here for scroll, will use MutationObserver in ngAfterViewInit
+    return 'bg-green-500';
   }
 
-  ngAfterViewInit() {
-    if (this.transcriptionContentRef && this.transcriptionContentRef.nativeElement) {
-      setTimeout(() => {
-        const el = this.transcriptionContentRef.nativeElement;
-        el.scrollTop = el.scrollHeight;
-      }, 0);
+  ngAfterViewInit(): void {
+    const container = this.transcriptionContentRef?.nativeElement;
+    if (!container) return;
 
-      this.mutationObserver = new MutationObserver(() => {
-        const el = this.transcriptionContentRef.nativeElement;
-        const { scrollHeight, clientHeight, scrollTop } = el;
-        if (scrollHeight > clientHeight * 1.1) {
-          if (scrollTop + clientHeight >= scrollHeight - clientHeight * 0.2) {
-            el.scrollTo({ top: scrollHeight, behavior: 'smooth' });
-          }
-        }
-      });
-      this.mutationObserver.observe(this.transcriptionContentRef.nativeElement, {
-        childList: true,
-        subtree: true,
-        characterData: true
-      });
-    }
+    setTimeout(() => {
+      container.scrollTop = container.scrollHeight;
+    }, 0);
+
+    this.mutationObserver = new MutationObserver(() => {
+      const { scrollHeight, clientHeight, scrollTop } = container;
+      const nearBottom = scrollTop + clientHeight >= scrollHeight - clientHeight * 0.2;
+
+      if (scrollHeight > clientHeight * 1.1 && nearBottom) {
+        container.scrollTo({ top: scrollHeight, behavior: 'smooth' });
+      }
+    });
+
+    this.mutationObserver.observe(container, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
   }
 
-  ngOnDestroy() {
-    if (this.mutationObserver) {
-      this.mutationObserver.disconnect();
-    }
+  ngOnDestroy(): void {
+    this.mutationObserver?.disconnect();
   }
 }

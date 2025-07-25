@@ -1,75 +1,81 @@
-<main class="container">
-  <header class="header">
-    <h1>🎤 Transcripción en Tiempo Real</h1>
+<main class="max-w-4xl mx-auto min-h-screen flex flex-col gap-8 p-4">
+  <header class="text-center mb-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">🎤 Transcripción en Tiempo Real</h1>
+    <div class="mx-auto w-16 h-1 bg-gradient-to-r from-blue-500 to-blue-300 rounded"></div>
   </header>
 
-  <section class="status-bar" aria-label="Estado de la transcripción">
-    <div class="status-grid">
-      <div class="status-item" *ngFor="let s of statusList">
+  <section class="bg-white rounded-xl shadow p-6 mb-4 animate-fadeInUp" aria-label="Estado de la transcripción">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div
+        class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200 transition hover:border-gray-300 hover:shadow"
+        *ngFor="let s of statusList">
+
         <div
-          class="status-indicator"
-          [class.connected]="s.connected"
+          class="w-2.5 h-2.5 rounded-full relative flex-shrink-0"
+          [ngClass]="getStatusDotColor(s)"
           [attr.aria-label]="s.ariaLabel"
-          role="status"
-        ></div>
-        <span class="status-text">{{ s.text }}</span>
+          role="status">
+        </div>
+
+        <span class="font-medium text-gray-700 text-sm">{{ s.text }}</span>
       </div>
     </div>
   </section>
 
-  <nav class="controls" aria-label="Controles">
-    <button class="btn btn-primary"
+
+  <nav class="flex flex-wrap justify-center gap-4 mb-4 animate-fadeInUp" aria-label="Controles">
+    <button class="px-6 py-2 rounded-lg font-medium text-sm bg-blue-500 text-white transition hover:bg-blue-700 min-w-[120px] disabled:opacity-50 disabled:cursor-not-allowed"
             (click)="connect()"
             [disabled]="status().websocket === 'connected'"
             aria-label="Conectar WebSocket"
             [attr.aria-pressed]="status().websocket === 'connected'">
       Conectar WebSocket
     </button>
-    <button class="btn btn-danger"
+    <button class="px-6 py-2 rounded-lg font-medium text-sm bg-red-500 text-white transition hover:bg-red-700 min-w-[120px] disabled:opacity-50 disabled:cursor-not-allowed"
             (click)="disconnect()"
             [disabled]="status().websocket !== 'connected'"
             aria-label="Desconectar WebSocket"
             [attr.aria-pressed]="status().websocket !== 'connected'">
       Desconectar
     </button>
-    <button class="btn btn-secondary"
+    <button class="px-6 py-2 rounded-lg font-medium text-sm bg-white text-gray-900 border border-gray-400 transition hover:bg-gray-50 hover:border-gray-600 min-w-[120px] disabled:opacity-50 disabled:cursor-not-allowed"
             (click)="clear()"
             aria-label="Limpiar Transcripción">
       Limpiar Transcripción
     </button>
   </nav>
 
-  <section class="transcription-panel" aria-label="Panel de transcripción">
-    <div class="panel-header">
+  <section class="bg-white rounded-xl shadow overflow-hidden flex flex-col h-[500px] animate-fadeInUp" aria-label="Panel de transcripción">
+    <div class="bg-gray-900 text-white px-6 py-4 font-semibold flex justify-between items-center text-base">
       <span>📝 Transcripción en Vivo</span>
-      <span class="word-count">{{ totalWords() }} palabras</span>
+      <span class="text-sm font-normal bg-white/10 px-2 py-1 rounded border border-white/20">{{ totalWords() }} palabras</span>
     </div>
-
-    <div class="transcription-content" aria-live="polite" #transcriptionContent>
+    <div class="flex-1 p-6 overflow-y-auto leading-relaxed text-base" aria-live="polite" #transcriptionContent>
       <div *ngIf="transcription(); else waiting">
-        <pre>{{ transcription() }}</pre>
+        <pre class="font-mono text-xl font-semibold text-gray-900 bg-gray-50 p-4 rounded-lg border-l-4 border-blue-500 m-0 whitespace-pre-wrap break-words">{{ transcription() }}</pre>
       </div>
       <ng-template #waiting>
-        <div class="empty-state">
+        <div class="text-center text-gray-400 italic mt-12 text-base flex flex-col items-center">
+          <span class="text-4xl mb-2 opacity-70">🎙️</span>
           Esperando transcripción... Conecta el WebSocket y comienza a hablar.
         </div>
       </ng-template>
     </div>
   </section>
 
-  <section class="stats-panel" aria-label="Estadísticas de la sesión">
-    <div class="stats-grid">
-      <div class="stat-item">
-        <span class="stat-number">{{ totalWords() }}</span>
-        <span class="stat-label">Total Palabras</span>
+  <section class="bg-white rounded-xl shadow p-6 mt-4 animate-fadeInUp" aria-label="Estadísticas de la sesión">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div class="text-center p-6 bg-gray-50 rounded-lg border border-gray-200 transition hover:border-blue-500 hover:shadow">
+        <span class="block text-2xl font-bold text-gray-800 mb-1 font-mono">{{ totalWords() }}</span>
+        <span class="text-gray-600 text-sm uppercase tracking-wider font-medium">Total Palabras</span>
       </div>
-      <div class="stat-item">
-        <span class="stat-number">{{ sessionTime() }}</span>
-        <span class="stat-label">Tiempo Sesión</span>
+      <div class="text-center p-6 bg-gray-50 rounded-lg border border-gray-200 transition hover:border-blue-500 hover:shadow">
+        <span class="block text-2xl font-bold text-gray-800 mb-1 font-mono">{{ sessionTime() }}</span>
+        <span class="text-gray-600 text-sm uppercase tracking-wider font-medium">Tiempo Sesión</span>
       </div>
-      <div class="stat-item">
-        <span class="stat-number">{{ chunksProcessed() }}</span>
-        <span class="stat-label">Chunks Procesados</span>
+      <div class="text-center p-6 bg-gray-50 rounded-lg border border-gray-200 transition hover:border-blue-500 hover:shadow">
+        <span class="block text-2xl font-bold text-gray-800 mb-1 font-mono">{{ chunksProcessed() }}</span>
+        <span class="text-gray-600 text-sm uppercase tracking-wider font-medium">Chunks Procesados</span>
       </div>
     </div>
   </section>
