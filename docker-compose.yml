@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  angular-front:
+    build:
+      context: ./angular-front
+    ports:
+      - "4200:80"
+    depends_on:
+      - gatewayapi
+
+  gatewayapi:
+    build:
+      context: ./api-gateway/gatewayapi
+    ports:
+      - "5000:8080"
+    depends_on:
+      - audio-streaming
+      - transcriptor-python
+
+  audio-streaming:
+    build:
+      context: ./audio-streaming-service
+    ports:
+      - "9000:9000"
+
+  transcriptor-python:
+    build:
+      context: ./transcriptor-python
+    ports:
+      - "8000:8000"
