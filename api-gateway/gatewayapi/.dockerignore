@@ -1,0 +1,34 @@
+﻿# Archivos de configuración del entorno y repositorio
+.env
+.git
+.gitignore
+.dockerignore
+
+# Configuración de IDEs/editores
+.vscode/
+.idea/
+.vs/
+.project
+.settings/
+.toolstarget
+
+# Archivos de usuario y configuración temporal
+*.dbmdl
+*.jfm
+*.user
+
+# Archivos de build y dependencias
+bin/
+obj/
+node_modules/
+npm-debug.log
+
+# Docker y archivos de configuración de Azure
+azds.yaml
+charts/
+secrets.dev.yaml
+values.dev.yaml
+
+# Documentación (puedes dejar README si lo querés incluir)
+LICENSE
+README.md
