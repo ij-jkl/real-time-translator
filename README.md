@@ -1,23 +1,23 @@
-# 🎤 Real-Time Audio Transcription System
+# Real-Time Audio Transcription System
 
-## 📋 TLDR
+## TLDR
 A microservices-based real-time audio transcription system built with Angular frontend, .NET API Gateway, and Python services. Users can record audio through their browser, which gets processed in real-time by OpenAI's Whisper model to provide live transcriptions with overlap handling and word counting features.
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
-This project implements a **microservices architecture** for real-time audio transcription:
+This project implements a **microservices architecture** for real-time audio transcription :
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  Angular Front  │ -> │  API Gateway    │ -> │ Audio Streaming │ -> │ Transcriptor    │
-│     (Port 4200) │    │   (.NET/YARP)   │    │   Service       │    │    Python       │
-│                 │    │   (Port 5000)   │    │  (Port 9000)    │    │  (Port 8000)    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘
-```
+---
 
-### 🔧 Components
+#### End-to-End Communication Flow Between Services
+
+![Complete Service-to-Service Flow](full-application-flow.png)
+
+---
+
+### Components
 
 1. **Angular Frontend**: Modern web interface for audio recording and transcription display
 2. **API Gateway (.NET)**: YARP-based reverse proxy routing requests to backend services
@@ -26,41 +26,44 @@ This project implements a **microservices architecture** for real-time audio tra
 
 ---
 
-## 🖼️ Application Preview
-
-### Default Interface
-![Default Application Screen](default-screen.png)
-*Clean, modern interface ready for real-time audio transcription*
+##  Application Preview
 
 ### Live Transcription Demos
 
 #### English Transcription Demo
 ![English Transcription Demo](engGif.gif)
-*Real-time English speech-to-text transcription in action*
+
+- English Live Transcription
 
 #### Spanish Transcription Demo
 ![Spanish Transcription Demo](spaGif.gif)
-*Demonstrating multilingual support with Spanish audio transcription*
+
+- Spanish Live Transcription
+
+### Default Interface
+![Default Application Screen](default-screen.png)
+
+- Default Page
 
 ### Transcription Results
 ![English Transcription Results](eng-transcription.png)
-*Example of completed English transcription with session analytics*
+
 
 ---
 
-## ✨ Features
+## Features
 
-- 🎙️ **Real-time audio recording** through browser microphone
-- 🔄 **Live transcription** with Whisper AI model
-- 📊 **Session analytics** (word count, processing time, chunks processed)
-- 🔄 **Overlap handling** to prevent repeated words in transcription
-- 🎯 **WebSocket-based** low-latency audio streaming
-- 🚀 **GPU acceleration** support for faster transcription
-- 🐳 **Docker containerization** for easy deployment
+- **Real-time audio recording** through browser microphone
+- **Live transcription** with Whisper AI model
+- **Session analytics** (word count, processing time, chunks processed)
+- **Overlap handling** to prevent repeated words in transcription
+- **WebSocket-based** low-latency audio streaming
+- **GPU acceleration** support for faster transcription
+- **Docker containerization** for easy deployment
 
 ---
 
-## 🛠️ Prerequisites
+## Prerequisites
 
 ### Required Software
 
@@ -79,7 +82,7 @@ The following packages will be installed automatically:
 
 ---
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 ### 1. Clone the Repository
 ```bash
@@ -124,7 +127,7 @@ npm install
 
 ---
 
-## 🏃‍♂️ Running the Application
+## Running the Application
 
 ### Option 1: Manual Service Startup (Recommended for Development)
 
@@ -157,9 +160,9 @@ docker-compose up --build
 
 ---
 
-## 🌐 Access Points
+## Access Points
 
-Once all services are running:
+Once all services are running, you can see them in the following URLS:
 
 - **Main Application**: http://localhost:4200
 - **API Gateway**: http://localhost:5000
@@ -168,7 +171,7 @@ Once all services are running:
 
 ---
 
-## 🎯 How It Works
+## How It Works
 
 1. **User Interface**: Angular app provides a clean interface for recording control
 2. **Audio Capture**: Browser captures microphone audio and streams via WebSocket
@@ -179,13 +182,13 @@ Once all services are running:
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
 ### Whisper Model Configuration
 The transcriptor service uses the **large** Whisper model by default. You can modify this in `transcriptor-python/main.py`:
 
 ```python
-model = whisper.load_model("large", device=device)  # Options: tiny, base, small, medium, large
+model = whisper.load_model("large", device=device)  # Options: tiny, base, small, medium, large , you can also set language
 ```
 
 ### Audio Processing Settings
@@ -199,7 +202,7 @@ OVERLAP_SECONDS = 1      # Overlap for continuity
 
 ---
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 The project includes Docker configuration for containerized deployment:
 
@@ -209,7 +212,7 @@ The project includes Docker configuration for containerized deployment:
 
 ---
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
