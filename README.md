@@ -153,7 +153,57 @@ npm install
    - Open `angular-front` folder in your IDE
    - Run `ng serve` or use IDE's built-in Angular support (starts on port 4200)
 
-### Option 2: Docker Compose (Production)
+### Option 2: PowerShell Scripts (Windows - Automated Startup)
+
+For Windows users, we provide convenient PowerShell scripts that automate the entire startup process with health monitoring:
+
+#### 🚀 **`start-services.ps1` - Complete Application Startup**
+This script automatically starts all services and performs health checks:
+
+![Start Services Script Demo](start-services-demo.png)
+
+```powershell
+.\start-services.ps1
+```
+
+**What it does:**
+- Starts all 4 services in separate PowerShell windows (you'll see 4 new terminal windows open)
+- Each service runs in its own dedicated terminal for easy monitoring and log viewing
+- Waits for services to initialize (10 seconds)
+- Automatically runs health checks on all endpoints
+- Opens the main application in your browser if all services are healthy
+- Shows real-time status and service URLs
+
+**Terminal Windows Opened:**
+1. **Transcriptor Python Service** - Port 8000 (Magenta window)
+2. **Audio Streaming Service** - Port 9000 (Blue window) 
+3. **API Gateway (.NET)** - Port 5224 (Green window)
+4. **Angular Frontend** - Port 4200 (Cyan window)
+
+#### 🔍 **`check_health.ps1` - Standalone Health Monitoring**
+Quick health check script for when services are already running:
+
+![Health Check Script Demo](health-check-demo.png)
+
+```powershell
+.\check_health.ps1
+```
+
+**What it does:**
+- Tests all service health endpoints (`/healthz`)
+- Tests detailed status endpoints (`/status`)
+- Shows service responses and configuration details
+- Identifies which services are unreachable
+- Perfect for troubleshooting and monitoring
+
+#### 🐍 **`test_health.py` - Python Health Testing**
+Alternative Python-based health checker with detailed JSON responses:
+
+```bash
+python test_health.py
+```
+
+### Option 3: Docker Compose (Production)
 ```bash
 docker-compose up --build
 ```
@@ -162,12 +212,23 @@ docker-compose up --build
 
 ## Access Points
 
-Once all services are running, you can see them in the following URLS:
+Once all services are running, you can access them at the following URLs:
 
 - **Main Application**: http://localhost:4200
-- **API Gateway**: http://localhost:5000
+- **API Gateway**: http://localhost:5224 (YARP reverse proxy)
 - **Transcriptor API**: http://localhost:8000 (with Swagger UI)
 - **Audio Streaming**: http://localhost:9000
+
+### Health Check Endpoints
+
+All services include health monitoring endpoints:
+
+- **API Gateway Health**: http://localhost:5224/health
+- **API Gateway Status**: http://localhost:5224/health/status (shows all downstream services)
+- **Transcriptor Health**: http://localhost:8000/healthz
+- **Transcriptor Status**: http://localhost:8000/status
+- **Audio Streaming Health**: http://localhost:9000/healthz
+- **Audio Streaming Status**: http://localhost:9000/status
 
 ---
 
@@ -179,6 +240,36 @@ Once all services are running, you can see them in the following URLS:
 4. **Transcription**: Whisper model processes audio chunks and returns text
 5. **Real-time Display**: Transcribed text appears live with duplicate word filtering
 6. **Analytics**: Session metrics are tracked and displayed in real-time
+
+---
+
+## Health Monitoring System
+
+The application includes a comprehensive health monitoring system to ensure all microservices are running correctly:
+
+### 🏥 **Built-in Health Checks**
+- **API Gateway**: Monitors itself and all downstream services
+- **Python Services**: Enhanced `/healthz` and `/status` endpoints with service details
+- **YARP Integration**: Health check routes for centralized monitoring
+- **Real-time Status**: PowerShell scripts provide live service status updates
+
+### 📊 **Monitoring Features**
+- **Service Discovery**: Automatic detection of unhealthy services
+- **Detailed Reporting**: JSON responses with service configuration details
+- **Retry Logic**: Health checks with configurable retry attempts
+- **Visual Feedback**: Color-coded status indicators (✅ Healthy, ❌ Unhealthy, ⏳ Waiting)
+
+### 🛠️ **Usage Examples**
+```powershell
+# Start everything with automatic health checks
+.\start-services.ps1
+
+# Quick health check of running services
+.\check_health.ps1
+
+# Python-based health testing
+python test_health.py
+```
 
 ---
 
