@@ -13,7 +13,7 @@ This project implements a **microservices architecture** for real-time audio tra
 
 #### End-to-End Communication Flow Between Services
 
-![Complete Service-to-Service Flow](full-application-flow.png)
+![Complete Service-to-Service Flow](images/full-application-flow.png)
 
 ---
 
@@ -31,22 +31,22 @@ This project implements a **microservices architecture** for real-time audio tra
 ### Live Transcription Demos
 
 #### English Transcription Demo
-![English Transcription Demo](engGif.gif)
+![English Transcription Demo](images/engGif.gif)
 
 - English Live Transcription
 
 #### Spanish Transcription Demo
-![Spanish Transcription Demo](spaGif.gif)
+![Spanish Transcription Demo](images/spaGif.gif)
 
 - Spanish Live Transcription
 
 ### Default Interface
-![Default Application Screen](default-screen.png)
+![Default Application Screen](images/default-screen.png)
 
 - Default Page
 
 ### Transcription Results
-![English Transcription Results](eng-transcription.png)
+![English Transcription Results](images/eng-transcription.png)
 
 
 ---
@@ -160,7 +160,7 @@ For Windows users, you can use the provided PowerShell scripts that automate the
 #### **`start-services.ps1` - Complete Application Startup**
 This script automatically starts all services and performs health checks:
 
-![Start Services Script Demo](entire_log_when_successful.png)
+![Start Services Script Demo](images/entire_log_when_successful.png)
 
 ```powershell
 .\start-services.ps1
@@ -176,7 +176,7 @@ This script automatically starts all services and performs health checks:
 
 This is what you will see when the 4 terminals, are correctly executed.
 
-![All Terminals](all_terminals.png)
+![All Terminals](images/all_terminals.png)
 
 **Terminal Windows Opened:**
 1. **Transcriptor Python Service** - Port 8000 (Magenta window)
@@ -187,7 +187,7 @@ This is what you will see when the 4 terminals, are correctly executed.
 #### **`check_health.ps1` - Standalone Health Monitoring**
 Quick health check script for when services are already running:
 
-![Health Check Script Demo](correct_health_check.png)
+![Health Check Script Demo](images/correct_health_check.png)
 
 ```powershell
 .\check_health.ps1
