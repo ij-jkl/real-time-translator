@@ -5,10 +5,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add custom middleware for health checks and logging requests
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy())
     .AddUrlGroup(new Uri("http://localhost:8000/healthz"), name: "transcriptor-service")
     .AddUrlGroup(new Uri("http://localhost:9000/healthz"), name: "audio-streaming-service");
+    
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 

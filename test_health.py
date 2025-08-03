@@ -1,4 +1,4 @@
-# Health Check Test Script
+# Health Check Test Script - Python
 # This script tests all the health endpoints
 
 import requests
@@ -8,17 +8,17 @@ def check_service(name, url):
     try:
         response = requests.get(url, timeout=5)
         if response.status_code == 200:
-            print(f"✅ {name}: HEALTHY")
-            print(f"   Response: {json.dumps(response.json(), indent=2)}")
+            print(f"{name}: HEALTHY")
+            print(f" Response: {json.dumps(response.json(), indent=2)}")
         else:
-            print(f"❌ {name}: UNHEALTHY (Status: {response.status_code})")
+            print(f"{name}: UNHEALTHY (Status: {response.status_code})")
     except Exception as e:
-        print(f"❌ {name}: UNREACHABLE ({str(e)})")
+        print(f"{name}: UNREACHABLE ({str(e)})")
     print()
 
 def main():
-    print("🔍 Health Check Report")
-    print("=" * 50)
+    print("Health Check Report")
+    print("----------------------------------------")
     
     # Test direct service endpoints
     check_service("Transcriptor Service", "http://localhost:8000/healthz")

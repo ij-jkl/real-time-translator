@@ -69,6 +69,7 @@ def healthz():
         "max_seconds": MAX_SECONDS
     })
 
+#Log info
 @app.get("/status")
 def status():
     return JSONResponse(content={

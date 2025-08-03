@@ -35,6 +35,7 @@ def healthz():
         "model": "large"
     })
 
+# For loggin information when printed
 @app.get("/status")
 def status():
     return JSONResponse(content={
