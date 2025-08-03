@@ -62,7 +62,23 @@ async def websocket_audio_handler(websocket: WebSocket):
 
 @app.get("/healthz")
 def healthz():
-    return JSONResponse(content={"status": "ok"})
+    return JSONResponse(content={
+        "status": "ok",
+        "service": "audio-streaming-service", 
+        "sample_rate": SAMPLE_RATE,
+        "max_seconds": MAX_SECONDS
+    })
+
+@app.get("/status")
+def status():
+    return JSONResponse(content={
+        "service": "audio-streaming-service",
+        "version": "1.0.0",
+        "sample_rate": SAMPLE_RATE,
+        "max_seconds": MAX_SECONDS,
+        "overlap_seconds": OVERLAP_SECONDS,
+        "chunk_size": CHUNK_SIZE
+    })
 
 
 """

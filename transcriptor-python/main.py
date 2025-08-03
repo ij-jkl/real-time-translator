@@ -28,7 +28,22 @@ model = whisper.load_model("large", device = device)
 
 @app.get("/healthz")
 def healthz():
-    return JSONResponse(content={"status": "ok"})
+    return JSONResponse(content={
+        "status": "ok", 
+        "service": "transcriptor-python",
+        "device": device,
+        "model": "large"
+    })
+
+@app.get("/status")
+def status():
+    return JSONResponse(content={
+        "service": "transcriptor-python",
+        "version": "1.0.0",
+        "device": device,
+        "whisper_model": "large",
+        "torch_available": torch.cuda.is_available() if device == "cuda" else False
+    })
 
 @app.post("/transcribe_from_audio")
 async def transcribe_from_audio(audioFile : UploadFile = File(...)):
@@ -53,7 +68,7 @@ async def transcribe_from_audio(audioFile : UploadFile = File(...)):
 
         # Transcribe the audio file using Whisper
         start_time = time.time()
-        transcription = model.transcribe(temp_path, language="es") # Change "en" to the desired language code if needed
+        transcription = model.transcribe(temp_path, language="es") # Change "en" for English
         end_time = time.time()
 
         total_time = end_time - start_time
