@@ -60,6 +60,35 @@ This project implements a **microservices architecture** for real-time audio tra
 - **WebSocket-based** low-latency audio streaming
 - **GPU acceleration** support for faster transcription
 - **Docker containerization** for easy deployment
+- **Database logging** with automatic transcription storage and data retention
+
+---
+
+## Database Integration
+
+Automatic transcription logging with configurable data retention:
+
+### Features
+- **Non-blocking logging**: Database failures don't affect transcription performance
+- **PII-safe**: IP addresses are hashed, minimal metadata stored
+- **Data retention**: Configurable cleanup (default: 90 days)
+- **Dual database support**: SQLite (dev) / PostgreSQL (prod)
+
+### API Endpoints
+- `GET /api/transcriptions` - Query transcription logs
+- `GET /api/transcriptions/{id}` - Get specific transcription
+- `GET /health/status` - Health checks including database connectivity
+
+### Configuration
+```json
+{
+  "Database": {
+    "Provider": "Sqlite|PostgreSQL",
+    "RetentionDays": 90,
+    "CleanupIntervalHours": 24
+  }
+}
+```
 
 ---
 
@@ -216,17 +245,21 @@ Once all services are running, you can access them at the following URLs:
 - **API Gateway**: http://localhost:5224 (YARP reverse proxy)
 - **Transcriptor API**: http://localhost:8000 (with Swagger UI)
 - **Audio Streaming**: http://localhost:9000
+- **Transcription Logs**: http://localhost:5224/api/transcriptions
 
 ### Health Check Endpoints
 
-All services include health monitoring endpoints:
-
 - **API Gateway Health**: http://localhost:5224/health
-- **API Gateway Status**: http://localhost:5224/health/status (shows all downstream services)
+- **API Gateway Status**: http://localhost:5224/health/status (includes database connectivity)
 - **Transcriptor Health**: http://localhost:8000/healthz
-- **Transcriptor Status**: http://localhost:8000/status
 - **Audio Streaming Health**: http://localhost:9000/healthz
-- **Audio Streaming Status**: http://localhost:9000/status
+
+### Manual Testing
+
+Use the included `.http` file for API testing:
+```
+api-gateway/gatewayapi/test-api.http
+```
 
 ---
 
@@ -236,8 +269,9 @@ All services include health monitoring endpoints:
 2. **Audio Capture**: Browser captures microphone audio and streams via WebSocket
 3. **Audio Processing**: Audio streaming service buffers audio chunks with overlap
 4. **Transcription**: Whisper model processes audio chunks and returns text
-5. **Real-time Display**: Transcribed text appears live with duplicate word filtering
-6. **Analytics**: Session metrics are tracked and displayed in real-time
+5. **Database Logging**: API Gateway automatically logs completed transcriptions
+6. **Real-time Display**: Transcribed text appears live with duplicate word filtering
+7. **Data Retention**: Background service cleans up old logs based on retention policy
 
 ---
 

@@ -19,6 +19,15 @@ venv/
 *.log
 
 # ====================
+# Database files
+# ====================
+*.db
+*.db-shm
+*.db-wal
+data/*.db
+data/*.db-*
+
+# ====================
 # Temporary audio files (recordings/uploads)
 # ====================
 *.wav

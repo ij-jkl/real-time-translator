@@ -1,23 +1,69 @@
+using gatewayapi.Data;
 using gatewayapi.Middleware;
+using gatewayapi.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
 
-// Add custom middleware for health checks and logging requests
+// Database configuration
+var databaseProvider = builder.Configuration.GetValue<string>("Database:Provider") ?? "Sqlite";
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+    ?? "Data Source=transcriptions.db";
+
+if (databaseProvider.Equals("PostgreSQL", StringComparison.OrdinalIgnoreCase))
+{
+    builder.Services.AddDbContext<TranscriptionDbContext>(options =>
+        options.UseNpgsql(connectionString));
+}
+else
+{
+    builder.Services.AddDbContext<TranscriptionDbContext>(options =>
+        options.UseSqlite(connectionString));
+}
+
+// Register services
+builder.Services.AddScoped<ITranscriptionLogService, TranscriptionLogService>();
+builder.Services.AddHostedService<DataRetentionService>();
+
+// Health checks
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy())
     .AddUrlGroup(new Uri("http://localhost:8000/healthz"), name: "transcriptor-service")
-    .AddUrlGroup(new Uri("http://localhost:9000/healthz"), name: "audio-streaming-service");
+    .AddUrlGroup(new Uri("http://localhost:9000/healthz"), name: "audio-streaming-service")
+    .AddDbContextCheck<TranscriptionDbContext>("database");
     
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Ensure database is created
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<TranscriptionDbContext>();
+    try
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            await context.Database.EnsureCreatedAsync();
+        }
+        else
+        {
+            await context.Database.MigrateAsync();
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Database initialization failed");
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -26,10 +72,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Add custom logging middleware before MapReverseProxy
+// Middleware
 app.UseMiddleware<RequestLoggingMiddleware>();
+app.UseMiddleware<TranscriptionLoggingMiddleware>();
 
-// Health check endpoints
+// API routes
+app.MapControllers();
+
+// Health checks
 app.MapHealthChecks("/health");
 app.MapGet("/health/status", async (IServiceProvider services) =>
 {
@@ -48,7 +98,7 @@ app.MapGet("/health/status", async (IServiceProvider services) =>
     });
 });
 
-// Enable YARP reverse proxy
+// YARP reverse proxy
 app.MapReverseProxy();
 
 app.Run();
